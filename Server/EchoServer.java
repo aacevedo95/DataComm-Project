@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.net.*;
 import java.io.*;
@@ -6,17 +6,20 @@ import java.io.*;
 public class EchoServer {
 	public static void main(String[] args) throws IOException {
 		int portNumber = 6980;
-
+		
+		//tries to begin socket connection
 		try (
 				ServerSocket serverSocket = new ServerSocket(portNumber);
 				Socket clientSocket = serverSocket.accept();     
 				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);                   
 				BufferedReader in = new BufferedReader( new InputStreamReader(clientSocket.getInputStream()));
 				) {
+			//reads incoming text from the PrintWriter created
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
 				out.println(inputLine);
 			}
+		//catches any errors
 		} catch (IOException e) {
 			System.out.println("Exception caught when trying to listen on port "
 					+ portNumber + " or listening for a connection");

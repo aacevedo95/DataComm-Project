@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.io.*;
 import java.net.*;
@@ -26,7 +26,7 @@ public class EchoClient {
 			while ((userInput = stdIn.readLine()) != null) {
 				out.println(userInput);
 				System.out.println(username +": " + in.readLine());
-				System.out.println(Game.Logic.commands("Fire", username));
+				System.out.println(game.Logic.commands("Fire", username));
 			}
 			
 			//error catching
