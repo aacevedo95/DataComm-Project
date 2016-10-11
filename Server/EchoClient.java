@@ -1,4 +1,4 @@
-package server;
+package Server;
 
 import java.io.*;
 import java.net.*;
@@ -30,7 +30,7 @@ public class EchoClient {
 					System.exit(0);
 				
 				System.out.println(username +": " + in.readLine());
-				System.out.println(game.Logic.commands("Fire", username));
+				System.out.println(Game.Logic.commands("Fire", username));
 			}
 			
 			//error catching
