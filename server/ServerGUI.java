@@ -1,4 +1,4 @@
-package test;
+package server;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -12,7 +12,6 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	// the stop and start buttons
 	private JButton stopStart;
 	// JTextArea for the chat room and the events
-	private JButton newWindow;
 	private JTextArea chat, event;
 	// The port number
 	private JTextField tPortNumber;
@@ -33,12 +32,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		stopStart = new JButton("Start");
 		stopStart.addActionListener(this);
 		
-		newWindow = new JButton("Open Chat");
-		newWindow.addActionListener(new ClientGUI("localhost", 1500));
-		
 		north.add(stopStart);
-		add(north, BorderLayout.NORTH);
-		north.add(newWindow);
 		add(north, BorderLayout.NORTH);
 		
 		// the event and chat room
