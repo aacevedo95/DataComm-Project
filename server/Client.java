@@ -4,6 +4,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import game.Logic;
+
 
 public class Client  {
 
@@ -13,7 +15,7 @@ public class Client  {
 	private Socket socket;
 
 	private ClientGUI clientGui;
-	
+
 	// the server, the port and the username
 	private String server, username;
 	private int port;
@@ -31,7 +33,7 @@ public class Client  {
 		// save if we are in GUI mode or not
 		this.clientGui = cg;
 	}
-	
+
 	/*
 	 * To start the dialog
 	 */
@@ -45,10 +47,10 @@ public class Client  {
 			display("Error connectiong to server:" + ec);
 			return false;
 		}
-		
+
 		String msg = "Connection accepted " + socket.getInetAddress() + ":" + socket.getPort();
 		display(msg);
-	
+
 		/* Creating both Data Stream */
 		try
 		{
@@ -81,12 +83,12 @@ public class Client  {
 	 * To send a message to the console or the GUI
 	 */
 	private void display(String msg) {
-		if(clientGui == null)
-			System.out.println(msg);      // println in console mode
-		else
-			clientGui.append(msg + "\n");		// append to the ClientGUI JTextArea (or whatever)
+		if(msg.charAt(0) == '/'){
+			cmdText(command(msg));
+		}
+		clientGui.append(msg + "\n");		// append to the ClientGUI JTextArea (or whatever)
 	}
-	
+
 	/*
 	 * To send a message to the server
 	 */
@@ -112,16 +114,27 @@ public class Client  {
 			if(output != null) output.close();
 		}
 		catch(Exception e) {} // not much else I can do
-        try{
+		try{
 			if(socket != null) socket.close();
 		}
 		catch(Exception e) {} // not much else I can do
-		
+
 		// inform the GUI
 		if(clientGui != null)
 			clientGui.connectionFailed();
-			
 	}
+
+	public static int command(String msg){
+		if(msg.equalsIgnoreCase("/fire"))
+			return 1;
+		return 0;
+	}
+	
+	public static String cmdText (int cmd){
+		if(cmd == 1) return "Fire!";
+		return " ";
+	}
+
 
 	/*
 	 * a class that waits for the message from the server and append them to the JTextArea
@@ -133,14 +146,7 @@ public class Client  {
 			while(true) {
 				try {
 					String msg = (String) input.readObject();
-					// if console mode print the message and add back the prompt
-					if(clientGui == null) {
-						System.out.println(msg);
-						System.out.print("> ");
-					}
-					else {
-						clientGui.append(msg);
-					}
+					clientGui.append(msg);
 				}
 				catch(IOException e) {
 					display("Server has close the connection: " + e);
