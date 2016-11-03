@@ -17,7 +17,8 @@ public class Client  {
 	private ClientGUI clientGui;
 
 	// the server, the port and the username
-	private String server, username;
+	private String server;
+	public String username;
 	private int port;
 
 	/**
@@ -83,9 +84,6 @@ public class Client  {
 	 * To send a message to the console or the GUI
 	 */
 	private void display(String msg) {
-		if(msg.charAt(0) == '/'){
-			cmdText(command(msg));
-		}
 		clientGui.append(msg + "\n");		// append to the ClientGUI JTextArea (or whatever)
 	}
 
@@ -123,18 +121,6 @@ public class Client  {
 		if(clientGui != null)
 			clientGui.connectionFailed();
 	}
-
-	public static int command(String msg){
-		if(msg.equalsIgnoreCase("/fire"))
-			return 1;
-		return 0;
-	}
-	
-	public static String cmdText (int cmd){
-		if(cmd == 1) return "Fire!";
-		return " ";
-	}
-
 
 	/*
 	 * a class that waits for the message from the server and append them to the JTextArea

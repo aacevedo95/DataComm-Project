@@ -1,7 +1,20 @@
 package server;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import game.Logic;
 
 
 /*
@@ -129,6 +142,10 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 		// ok it is coming from the JTextField
 		if(connected) {
+			//Check if message contains a command
+			if(tf.getText().charAt(0) == '/') {
+				tf.setText(Logic.command(tf.getText()));
+			}
 			// just have to send the message
 			client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, tf.getText()));				
 			tf.setText("");

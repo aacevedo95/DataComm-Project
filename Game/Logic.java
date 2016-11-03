@@ -1,5 +1,7 @@
 package game;
 
+import server.Client;
+
 public class Logic {
 
 	public static String commands(String text, String user){
@@ -20,6 +22,12 @@ public class Logic {
 	public static void setCommand(String message){
 		
 		
+	}
+	
+	public static String command(String text) {
+		if(text.equalsIgnoreCase("/fire")) return "Fire!";
+		if(text.equalsIgnoreCase("/attack") || text.equalsIgnoreCase("/atk")) return "Attack!";
+		return "Error! \""+ text + "\" not recognized try again.";
 	}
 
 //	public static void decisions (){

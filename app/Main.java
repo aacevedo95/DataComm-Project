@@ -9,5 +9,4 @@ public class Main {
 		ClientGUI.main(null);
 		ServerGUI.main(null);
 	}
-
 }
