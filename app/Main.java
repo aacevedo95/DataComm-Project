@@ -1,12 +1,10 @@
 package app;
 
-import server.ClientGUI;
-import server.ServerGUI;
+import game.Logic;
 
 public class Main {
-
+	
 	public static void main(String[] args) {
-		ClientGUI.main(null);
-		ServerGUI.main(null);
+		Logic.run();
 	}
 }

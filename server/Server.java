@@ -140,11 +140,20 @@ public class Server {
 			}
 		}
 	}
+	
+	synchronized void damageUser(double damage, int id, Client client) {
+		for(int i = 0; i < usersList.size(); ++i) {
+			ClientThread clientThread = usersList.get(i);
+			if(clientThread.id == id) {
+				client.setHealth(client.getHealth() - damage);
+			}
+		}
+	}
 
 	//runs the server
 	public static void main(String[] args) {
 		int portNumber = 1500;
-
+		
 		Server server = new Server(portNumber);
 		server.start();
 	}
@@ -157,6 +166,7 @@ public class Server {
 		int id;
 		String username;
 		ChatMessage msg;
+		double health;
 
 		/**
 		 * ClientThread's constructor.
@@ -172,7 +182,8 @@ public class Server {
 				output = new ObjectOutputStream(socket.getOutputStream());
 				input  = new ObjectInputStream(socket.getInputStream());
 				username = (String) input.readObject();
-				display(username + " just connected.");
+				display(username + " just connected." + "your ID is: " + id);
+				
 			}
 			catch (IOException e) {
 				display("Exception creating new Input/output Streams: " + e);

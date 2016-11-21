@@ -4,8 +4,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import game.Logic;
-
 
 public class Client  {
 
@@ -20,6 +18,7 @@ public class Client  {
 	private String server;
 	public String username;
 	private int port;
+	public double health;
 
 	/**
 	 * Client's constructor.
@@ -27,14 +26,28 @@ public class Client  {
 	 * @param port
 	 * @param username
 	 */
-	Client(String server, int port, String username, ClientGUI cg) {
+	Client(String server, int port, String username, ClientGUI cg, double health) {
 		this.server = server;
 		this.port = port;
 		this.username = username;
-		// save if we are in GUI mode or not
 		this.clientGui = cg;
+		this.health = health;
 	}
 
+	/*
+	 * Sets the player health
+	 */
+	public void setHealth(double currentHealth){
+		this.health = currentHealth;
+	}
+	
+	/*
+	 * Returns the player's health
+	 */
+	public double getHealth(){
+		return this.health;
+	}
+	
 	/*
 	 * To start the dialog
 	 */
