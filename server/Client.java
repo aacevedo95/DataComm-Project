@@ -4,6 +4,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import server.Server.ClientThread;
+
 
 public class Client  {
 
@@ -34,6 +36,9 @@ public class Client  {
 		this.health = health;
 	}
 
+	public int getID (ClientThread ct){
+		return ct.id;
+	}
 	/*
 	 * Sets the player health
 	 */

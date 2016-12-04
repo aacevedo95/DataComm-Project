@@ -139,7 +139,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 			client.sendMessage(new ChatMessage(ChatMessage.WHO, ""));				
 			return;
 		}
-
 		// ok it is coming from the JTextField
 		if(connected) {
 			// chat commands validation

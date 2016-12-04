@@ -15,8 +15,7 @@ public class Server {
 	private ServerGUI serverGui;
 	private int port;
 	private boolean isOnline;
-
-
+	
 	/**
 	 * The server's no arg constructor.
 	 * @param port
@@ -78,7 +77,6 @@ public class Server {
 			display("Exception on new ServerSocket: " + err + "\n");
 		}
 	}
-	
 	
 	/**
 	 * Stop server.
@@ -159,14 +157,13 @@ public class Server {
 	}
 
 	/** One instance of this thread will run for each client */
-	class ClientThread extends Thread {
+	public class ClientThread extends Thread {
 		Socket socket;
 		ObjectInputStream input;
 		ObjectOutputStream output;
 		int id;
 		String username;
 		ChatMessage msg;
-		double health;
 
 		/**
 		 * ClientThread's constructor.
@@ -183,7 +180,6 @@ public class Server {
 				input  = new ObjectInputStream(socket.getInputStream());
 				username = (String) input.readObject();
 				display(username + " just connected." + "your ID is: " + id);
-				
 			}
 			catch (IOException e) {
 				display("Exception creating new Input/output Streams: " + e);

@@ -12,18 +12,10 @@ public class Logic {
 	 * Finds any commands in the chat and parses it, later invokes command and damage methods.
 	 */
 	public static void chatCommands(JTextField text, Client client){
+		//Initial if, checks if text is a command.
 		if(text.getText().charAt(0) == '/') {
-			if(text.getText().equalsIgnoreCase("/hp") 
-					|| text.getText().equalsIgnoreCase("/health")) 
-				text.setText("Current health: "+ client.getHealth());
-			else {
-				if(command(text.getText()).charAt(0) == 'X')text.setText(command(text.getText()));
-				else {
-					client.setHealth(client.getHealth() - damage(text.getText()));
-					text.setText(client.username + " casts " + command(text.getText()) + " It dealt "+  damage(text.getText())
-					+" points of damage!!");
-				}
-			}
+			//Returns your chosen command formatted nicely.
+			text.setText(client.username +" " + command(text.getText(), client));
 		}
 	}
 
@@ -38,32 +30,68 @@ public class Logic {
 		else if(d20 >= 6 || d20 <= 15 ) multiplier = 1;
 		else if (d20 >= 16) multiplier = 1.5;
 		else if (d20 == 20) multiplier = 2;
-		if(command.equalsIgnoreCase("/fire")) dmg = (multiplier*d20 + 4);  
-		if(command.equalsIgnoreCase("/attack") || command.equalsIgnoreCase("/atk")) dmg = multiplier*d20 + 3;
+
+		switch(command){
+		case "/fire":
+			dmg = (multiplier*d20 + 4);  
+			break;
+		case "/lightning":
+			dmg = (multiplier*d20 + 3);  
+			break;
+		case "/ice":
+			dmg = (multiplier*d20 + 2);  
+			break;
+		case "/attack":
+			dmg = multiplier*d20 + 1;
+			break;
+		}
 
 		return dmg;
 	}
-	
+
 	/*
 	 * The commands the user can input.
 	 */
-	public static String command(String text) {
-		if(text.equalsIgnoreCase("/fire")) return "Fire!";
-		if(text.equalsIgnoreCase("/lightning")) return "Lightning!";
-		if(text.equalsIgnoreCase("/Ice")) return "Ice!";
-		if(text.equalsIgnoreCase("/attack") || text.equalsIgnoreCase("/atk")) return "Attack!";
-		if(text.equalsIgnoreCase("/look left")) return "You see a lush green forrest.";
-		if(text.equalsIgnoreCase("/look right")) return "You see an abandones house.";
+	public static String command(String text, Client client) {
+		double dmg;
+		String result;
+		switch(text){
+		default:
+			result = "X-Error! \""+ text + "\" not recognized try again.";
+			break;
+		case "/hp":
+			result = "Current health: "+ client.getHealth();
+			break;
+		case "/fire":
+			dmg = damage(text);
+			client.setHealth(client.getHealth() - dmg);
+			result =  " casts fire, it dealt " + dmg+" damage!";
+			break;
+		case "/lightning":
+			dmg = damage(text);
+			client.setHealth(client.getHealth() - dmg);
+			result =  " casts lightning, it dealt " + dmg+" damage!";
+			break;
+		case "/ice":
+			dmg = damage(text);
+			client.setHealth(client.getHealth() - dmg);
+			result =  " casts ice, it dealt " + dmg+" damage!";
+			break;
+		case "/attack":
+			dmg = damage(text);
+			client.setHealth(client.getHealth() - dmg);
+			result = " casts attack, it dealt " + dmg+" damage!";
+			break;
+		}
 
-		return "X-Error! \""+ text + "\" not recognized try again.";
+		return result;
 	}
-	
+
 	/*
 	 * Runs the program, calling the main methods in ClientGUI and ServerGUI 
 	 * 
 	 */
 	public static void run(){
-		ClientGUI.main(null);
 		ClientGUI.main(null);
 		ServerGUI.main(null);
 	}

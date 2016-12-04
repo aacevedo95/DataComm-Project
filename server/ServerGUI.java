@@ -1,13 +1,29 @@
 package server;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /*
  * The server as a GUI
  */
 public class ServerGUI extends JFrame implements ActionListener, WindowListener {
-	
+
 	private static final long serialVersionUID = 1L;
 	// the stop and start buttons
 	private JButton stopStart;
@@ -17,8 +33,8 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	private JTextField tPortNumber;
 	// my server
 	private Server server;
-	
-	
+
+
 	// server constructor that receive the port to listen to for connection as parameter
 	ServerGUI(int port) {
 		super("Chat Server");
@@ -31,10 +47,10 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		// to stop or start the server, we start with "Start"
 		stopStart = new JButton("Start");
 		stopStart.addActionListener(this);
-		
+
 		north.add(stopStart);
 		add(north, BorderLayout.NORTH);
-		
+
 		// the event and chat room
 		JPanel center = new JPanel(new GridLayout(2,1));
 		chat = new JTextArea(80,80);
@@ -46,7 +62,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		appendEvent("Events log.\n");
 		center.add(new JScrollPane(event));	
 		add(center);
-		
+
 		// need to be informed when the user click the close button on the frame
 		addWindowListener(this);
 		setSize(400, 600);
@@ -62,9 +78,9 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	void appendEvent(String str) {
 		event.append(str);
 		event.setCaretPosition(chat.getText().length());
-		
+
 	}
-	
+
 	// start or stop where clicked
 	public void actionPerformed(ActionEvent e) {
 		// if running we have to stop
@@ -75,7 +91,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 			stopStart.setText("Start");
 			return;
 		}
-      	// OK start the server	
+		// OK start the server	
 		int port;
 		try {
 			port = Integer.parseInt(tPortNumber.getText().trim());
@@ -91,7 +107,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		stopStart.setText("Stop");
 		tPortNumber.setEditable(false);
 	}
-	
+
 	// entry point to start the Server
 	public static void main(String[] arg) {
 		// start server default port 1500
@@ -124,11 +140,31 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	public void windowActivated(WindowEvent e) {}
 	public void windowDeactivated(WindowEvent e) {}
 
+	private static InetAddress getLocalAddress(){
+		try
+		{
+			Enumeration<NetworkInterface> b = NetworkInterface.getNetworkInterfaces();
+			while (b.hasMoreElements())
+			{
+				for (InterfaceAddress f : b.nextElement().getInterfaceAddresses())
+					if (f.getAddress().isSiteLocalAddress())
+						return f.getAddress();
+			}
+		}
+		catch (SocketException e)
+		{
+			System.out.println("Error getting local address:");
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+
 	/*
 	 * A thread to run the Server
 	 */
 	class ServerRunning extends Thread {
 		public void run() {
+			System.out.println(getLocalAddress());
 			server.start();         // should execute until if fails
 			// the server failed
 			stopStart.setText("Start");
