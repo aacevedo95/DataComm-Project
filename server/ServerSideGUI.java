@@ -22,63 +22,51 @@ import javax.swing.JTextField;
 /*
  * The server as a GUI
  */
-public class ServerGUI extends JFrame implements ActionListener, WindowListener {
+public class ServerSideGUI extends JFrame implements ActionListener, WindowListener {
 
 	private static final long serialVersionUID = 1L;
-	// the stop and start buttons
 	private JButton stopStart;
-	// JTextArea for the chat room and the events
 	private JTextArea chat, event;
-	// The port number
 	private JTextField tPortNumber;
-	// my server
 	private Server server;
 
 
 	// server constructor that receive the port to listen to for connection as parameter
-	ServerGUI(int port) {
+	ServerSideGUI(int port) {
 		super("Chat Server");
 		server = null;
-		// in the NorthPanel the PortNumber the Start and Stop buttons
 		JPanel north = new JPanel();
+		JPanel center = new JPanel(new GridLayout(2,1));
+		
 		north.add(new JLabel("Port number: "));
 		tPortNumber = new JTextField("  " + port);
 		north.add(tPortNumber);
-		// to stop or start the server, we start with "Start"
 		stopStart = new JButton("Start");
 		stopStart.addActionListener(this);
-
 		north.add(stopStart);
 		add(north, BorderLayout.NORTH);
-
-		// the event and chat room
-		JPanel center = new JPanel(new GridLayout(2,1));
 		chat = new JTextArea(80,80);
 		chat.setEditable(false);
-		appendRoom("Chat room.\n");
+		updateRoomMsg("Chat room.\n");
 		center.add(new JScrollPane(chat));
 		event = new JTextArea(80,80);
 		event.setEditable(false);
-		appendEvent("Events log.\n");
+		updateEventMsg("Events log.\n");
+		
 		center.add(new JScrollPane(event));	
 		add(center);
-
-		// need to be informed when the user click the close button on the frame
 		addWindowListener(this);
 		setSize(400, 600);
 		setVisible(true);
 	}		
 
-	// append message to the two JTextArea
-	// position at the end
-	void appendRoom(String str) {
+	void updateRoomMsg(String str) {
 		chat.append(str);
 		chat.setCaretPosition(chat.getText().length());
 	}
-	void appendEvent(String str) {
+	void updateEventMsg(String str) {
 		event.append(str);
 		event.setCaretPosition(chat.getText().length());
-
 	}
 
 	// start or stop where clicked
@@ -97,7 +85,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 			port = Integer.parseInt(tPortNumber.getText().trim());
 		}
 		catch(Exception er) {
-			appendEvent("Invalid port number");
+			updateEventMsg("Invalid port number");
 			return;
 		}
 		// ceate a new Server
@@ -111,7 +99,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	// entry point to start the Server
 	public static void main(String[] arg) {
 		// start server default port 1500
-		new ServerGUI(1500);
+		new ServerSideGUI(1500);
 	}
 
 	/*
@@ -132,7 +120,6 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		dispose();
 		System.exit(0);
 	}
-	// I can ignore the other WindowListener method
 	public void windowClosed(WindowEvent e) {}
 	public void windowOpened(WindowEvent e) {}
 	public void windowIconified(WindowEvent e) {}
@@ -169,7 +156,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 			// the server failed
 			stopStart.setText("Start");
 			tPortNumber.setEditable(true);
-			appendEvent("Server crashed\n");
+			updateEventMsg("Server crashed\n");
 			server = null;
 		}
 	}

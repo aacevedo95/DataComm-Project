@@ -6,13 +6,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import client.Client;
+import client.Message;
+
+
 /*
  * The server that can be run both as a console application or a GUI
  */
 public class Server {
 	private static int uniqueId;
 	private ArrayList<ClientThread> usersList;
-	private ServerGUI serverGui;
+	private ServerSideGUI serverGui;
 	private int port;
 	private boolean isOnline;
 	
@@ -29,7 +33,7 @@ public class Server {
 	 * @param port
 	 * @param serverGui
 	 */
-	public Server(int port, ServerGUI serverGui) {
+	public Server(int port, ServerSideGUI serverGui) {
 		this.serverGui = serverGui;
 		this.port = port;
 		usersList = new ArrayList<ClientThread>();
@@ -96,7 +100,7 @@ public class Server {
 	 * @param msg
 	 */
 	private void display(String msg) {
-		serverGui.appendEvent(msg + "\n");
+		serverGui.updateEventMsg(msg + "\n");
 	}
 	
 	/**
@@ -110,7 +114,7 @@ public class Server {
 		if(serverGui == null)
 			System.out.print(messageLf);
 		else
-			serverGui.appendRoom(messageLf);     // append in the room window
+			serverGui.updateRoomMsg(messageLf);     // append in the room window
 
 		// we loop in reverse order in case we would have to remove a Client
 		// because it has disconnected
@@ -139,10 +143,10 @@ public class Server {
 		}
 	}
 	
-	synchronized void damageUser(double damage, int id, Client client) {
+	synchronized void damageUser(double damage, Client client) {
 		for(int i = 0; i < usersList.size(); ++i) {
 			ClientThread clientThread = usersList.get(i);
-			if(clientThread.id == id) {
+			if(clientThread.username == client.username) {
 				client.setHealth(client.getHealth() - damage);
 			}
 		}
@@ -151,7 +155,6 @@ public class Server {
 	//runs the server
 	public static void main(String[] args) {
 		int portNumber = 1500;
-		
 		Server server = new Server(portNumber);
 		server.start();
 	}
@@ -163,7 +166,7 @@ public class Server {
 		ObjectOutputStream output;
 		int id;
 		String username;
-		ChatMessage msg;
+		Message msg;
 
 		/**
 		 * ClientThread's constructor.
@@ -194,7 +197,7 @@ public class Server {
 			boolean keepGoing = true;
 			while(keepGoing) {
 				try {
-					msg = (ChatMessage) input.readObject();
+					msg = (Message) input.readObject();
 				}
 				catch (IOException e) {
 					display(username + " Exception reading Streams: " + e);
@@ -207,14 +210,14 @@ public class Server {
 
 				switch(msg.getType()) {
 
-				case ChatMessage.MESSAGE:
+				case Message.MESSAGE:
 					broadcast(username + ": " + message);
 					break;
-				case ChatMessage.LOGOUT:
+				case Message.LOGOUT:
 					display(username + " disconnected with a LOGOUT message.");
 					keepGoing = false;
 					break;
-				case ChatMessage.WHO:
+				case Message.WHO:
 					writeMsg("List of the users connected\n");
 					for(int i = 0; i < usersList.size(); ++i) {
 						ClientThread thread = usersList.get(i);

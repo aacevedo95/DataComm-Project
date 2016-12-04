@@ -2,9 +2,9 @@ package game;
 
 import javax.swing.JTextField;
 
-import server.Client;
-import server.ClientGUI;
-import server.ServerGUI;
+import client.Client;
+import client.ClientSideGUI;
+import server.ServerSideGUI;
 
 public class Logic {
 
@@ -23,9 +23,11 @@ public class Logic {
 	 * Calculates damage, uses a 20 sided die as a damage multiplier.
 	 */
 	public static double damage(String command){
+		//20 Sided die, used to calculate multiplier.
 		int d20 = (int)(Math.random()*20+1);
 		double multiplier = 0;
 		double dmg = 0;
+		//Multiplier 
 		if(d20 <= 5) multiplier = 0;
 		else if(d20 >= 6 || d20 <= 15 ) multiplier = 1;
 		else if (d20 >= 16) multiplier = 1.5;
@@ -45,7 +47,6 @@ public class Logic {
 			dmg = multiplier*d20 + 1;
 			break;
 		}
-
 		return dmg;
 	}
 
@@ -83,7 +84,6 @@ public class Logic {
 			result = " casts attack, it dealt " + dmg+" damage!";
 			break;
 		}
-
 		return result;
 	}
 
@@ -92,8 +92,9 @@ public class Logic {
 	 * 
 	 */
 	public static void run(){
-		ClientGUI.main(null);
-		ServerGUI.main(null);
+		ClientSideGUI.main(null);
+		ClientSideGUI.main(null);
+		ServerSideGUI.main(null);
 	}
 
 }

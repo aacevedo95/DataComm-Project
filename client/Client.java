@@ -1,11 +1,8 @@
-package server;
+package client;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
-import server.Server.ClientThread;
-
 
 public class Client  {
 
@@ -14,7 +11,7 @@ public class Client  {
 	private ObjectOutputStream output;		
 	private Socket socket;
 
-	private ClientGUI clientGui;
+	private ClientSideGUI clientGui;
 
 	// the server, the port and the username
 	private String server;
@@ -28,7 +25,7 @@ public class Client  {
 	 * @param port
 	 * @param username
 	 */
-	Client(String server, int port, String username, ClientGUI cg, double health) {
+	Client(String server, int port, String username, ClientSideGUI cg, double health) {
 		this.server = server;
 		this.port = port;
 		this.username = username;
@@ -36,23 +33,20 @@ public class Client  {
 		this.health = health;
 	}
 
-	public int getID (ClientThread ct){
-		return ct.id;
-	}
 	/*
 	 * Sets the player health
 	 */
 	public void setHealth(double currentHealth){
 		this.health = currentHealth;
 	}
-	
+
 	/*
 	 * Returns the player's health
 	 */
 	public double getHealth(){
 		return this.health;
 	}
-	
+
 	/*
 	 * To start the dialog
 	 */
@@ -94,7 +88,6 @@ public class Client  {
 			disconnect();
 			return false;
 		}
-		// success we inform the caller that it worked
 		return true;
 	}
 
@@ -102,13 +95,13 @@ public class Client  {
 	 * To send a message to the console or the GUI
 	 */
 	private void display(String msg) {
-		clientGui.append(msg + "\n");		// append to the ClientGUI JTextArea (or whatever)
+		clientGui.append(msg + "\n");
 	}
 
 	/*
 	 * To send a message to the server
 	 */
-	void sendMessage(ChatMessage msg) {
+	void sendMessage(Message msg) {
 		try {
 			output.writeObject(msg);
 		}
@@ -116,26 +109,24 @@ public class Client  {
 			display("Exception writing to server: " + e);
 		}
 	}
-
+	
 	/*
-	 * When something goes wrong
-	 * Close the Input/Output streams and disconnect not much to do in the catch clause
+	 * Check if the client just disconnected. If so, close input, output and socket.
 	 */
 	private void disconnect() {
 		try { 
 			if(input != null) input.close();
 		}
-		catch(Exception e) {} // not much else I can do
+		catch(Exception e) {} 
 		try {
 			if(output != null) output.close();
 		}
-		catch(Exception e) {} // not much else I can do
+		catch(Exception e) {} 
 		try{
 			if(socket != null) socket.close();
 		}
-		catch(Exception e) {} // not much else I can do
+		catch(Exception e) {} 
 
-		// inform the GUI
 		if(clientGui != null)
 			clientGui.connectionFailed();
 	}

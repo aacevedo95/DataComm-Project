@@ -1,4 +1,4 @@
-package server;
+package client;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -20,33 +20,27 @@ import game.Logic;
 /*
  * The Client with its GUI
  */
-public class ClientGUI extends JFrame implements ActionListener {
+public class ClientSideGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	// will first hold "Username:", later on "Enter message"
 	private JLabel label;
-	// to hold the Username and later on the messages
 	private JTextField tf;
-	// to hold the server address an the port number
 	private JTextField tfServer, tfPort;
-	// to Logout and get the list of the users
 	private JButton login, logout, whoIsIn;
-	// for the chat room
 	private JTextArea ta;
 	private boolean connected;
-	// the Client object
 	private Client client;
-	// the default port number
 	private int defaultPort;
 	private String defaultHost;
 
 	// Constructor connection receiving a socket number
-	ClientGUI(String host, int port) {
+	ClientSideGUI(String host, int port) {
 		super("Chat Client");
 		defaultPort = port;
 		defaultHost = host;
-
-		// The CenterPanel which is the chat room
+		JPanel southPanel = new JPanel();
+		JPanel northPanel = new JPanel(new GridLayout(3,1));
+		
 		ta = new JTextArea("Welcome to the Chat room\n", 80, 80);
 		JPanel centerPanel = new JPanel(new GridLayout(1,1));
 		JScrollPane scrollPane = new JScrollPane(ta);
@@ -54,24 +48,18 @@ public class ClientGUI extends JFrame implements ActionListener {
 		ta.setEditable(false);
 		getContentPane().add(centerPanel, BorderLayout.CENTER);
 
-		// the 3 buttons
 		login = new JButton("Login");
 		login.addActionListener(this);
 		logout = new JButton("Logout");
 		logout.addActionListener(this);
-		logout.setEnabled(false);		// you have to login before being able to logout
+		logout.setEnabled(false);		
 		whoIsIn = new JButton("Who is in");
 		whoIsIn.addActionListener(this);
-		whoIsIn.setEnabled(true);		// you have to login before being able to Who is in
+		whoIsIn.setEnabled(true);		
 
-		JPanel southPanel = new JPanel();
-
-		// The NorthPanel with:
-		JPanel northPanel = new JPanel(new GridLayout(3,1));
+		
 		southPanel.add(northPanel);
-		// the server name anmd the port number
 		JPanel serverAndPort = new JPanel(new GridLayout(1,5, 1, 3));
-		// the two JTextField with default value for server address and port number
 		tfServer = new JTextField(host);
 		tfPort = new JTextField("" + port);
 		tfPort.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -81,10 +69,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 		serverAndPort.add(new JLabel("Port Number:  "));
 		serverAndPort.add(tfPort);
 		serverAndPort.add(new JLabel(""));
-		// adds the Server an port field to the GUI
 		northPanel.add(serverAndPort);
 
-		// the Label and the TextField
 		label = new JLabel("Enter your username below", SwingConstants.CENTER);
 		northPanel.add(label);
 		tf = new JTextField("Anonymous");
@@ -113,13 +99,10 @@ public class ClientGUI extends JFrame implements ActionListener {
 		whoIsIn.setEnabled(false);
 		label.setText("Enter your username below");
 		tf.setText("Anonymous");
-		// reset port number and host name as a construction time
 		tfPort.setText("" + defaultPort);
 		tfServer.setText(defaultHost);
-		// let the user change them
 		tfServer.setEditable(false);
 		tfPort.setEditable(false);
-		// don't react to a <CR> after the username
 		tf.removeActionListener(this);
 		connected = false;
 	}
@@ -131,12 +114,12 @@ public class ClientGUI extends JFrame implements ActionListener {
 		Object o = e.getSource();
 		// if it is the Logout button
 		if(o == logout) {
-			client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, ""));
+			client.sendMessage(new Message(Message.LOGOUT, ""));
 			return;
 		}
 		// if it the who is in button
 		if(o == whoIsIn) {
-			client.sendMessage(new ChatMessage(ChatMessage.WHO, ""));				
+			client.sendMessage(new Message(Message.WHO, ""));				
 			return;
 		}
 		// ok it is coming from the JTextField
@@ -144,7 +127,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			// chat commands validation
 			Logic.chatCommands(tf, client);
 			// just have to send the message
-			client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, tf.getText()));				
+			client.sendMessage(new Message(Message.MESSAGE, tf.getText()));				
 			tf.setText("");
 			return;
 		}
@@ -169,27 +152,21 @@ public class ClientGUI extends JFrame implements ActionListener {
 				port = Integer.parseInt(portNumber);
 			}
 			catch(Exception en) {
-				return;   // nothing I can do if port number is not valid
+				return;  
 			}
 
-			// try creating a new Client with GUI
 			client = new Client(server, port, username, this, 100);
-			// test if we can start the Client
 			if(!client.start()) 
 				return;
 			tf.setText("");
 			label.setText("Enter your message below");
 			connected = true;
 
-			// disable login button
 			login.setEnabled(false);
-			// enable the 2 buttons
 			logout.setEnabled(true);
 			whoIsIn.setEnabled(true);
-			// disable the Server and Port JTextField
 			tfServer.setEditable(false);
 			tfPort.setEditable(false);
-			// Action listener for when the user enter a message
 			tf.addActionListener(this);
 		}
 
@@ -197,7 +174,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 	// to start the whole thing the server
 	public static void main(String[] args) {
-		new ClientGUI("localhost", 1500);
+		new ClientSideGUI("localhost", 1500);
 
 	}
 
