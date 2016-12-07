@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import client.Message;
-import game.Logic;
+import Game.Logic;
 
 
 /*

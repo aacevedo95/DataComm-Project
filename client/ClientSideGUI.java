@@ -1,10 +1,15 @@
 package client;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,7 +19,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import game.Logic;
+import Game.Logic;
+import javafx.scene.text.FontBuilder;
+import sun.font.FontFamily;
+import com.sun.javafx.font.FontFactory;
 
 
 /*
@@ -32,6 +40,7 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 	private Client client;
 	private int defaultPort;
 	private String defaultHost;
+	private JLabel header;
 
 	// Constructor connection receiving a socket number
 	ClientSideGUI(String host, int port) {
@@ -41,8 +50,22 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		JPanel southPanel = new JPanel();
 		JPanel northPanel = new JPanel(new GridLayout(3,1));
 		
-		ta = new JTextArea("Welcome to the Chat room\n", 80, 80);
+		Font font = new Font("Arial", Font.BOLD,12);
+		
+		
+	
+		
+		ta = new JTextArea("\t\tWelcome to Dungeons & Sockets\n" + "\t                You may think this is a normal chat, but it isn't.\n \t     These are are some of the commads to get you started\n" +
+		"\t\t\t/fire\n\t\t\t/lightning\n\t\t\t/ice\n\t\t\t/attack\n \tYou can check your enemies health by typing /hp. Good Luck!", 80, 80);
+		
+		ta.setFont(font);
+		
+		
+		
 		JPanel centerPanel = new JPanel(new GridLayout(1,1));
+		ta.setLineWrap(true);
+		ta.setWrapStyleWord(true);
+		
 		JScrollPane scrollPane = new JScrollPane(ta);
 		centerPanel.add(scrollPane);
 		ta.setEditable(false);
@@ -55,7 +78,11 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		logout.setEnabled(false);		
 		whoIsIn = new JButton("Who is in");
 		whoIsIn.addActionListener(this);
-		whoIsIn.setEnabled(true);		
+		whoIsIn.setEnabled(true);
+		
+		header = new JLabel("DUNGEONS & SOCKETS", SwingConstants.CENTER);
+		header.setFont(new Font("Zapf Dingbats", Font.BOLD, 40));
+		getContentPane().add(header, BorderLayout.NORTH);
 
 		
 		southPanel.add(northPanel);
@@ -80,8 +107,13 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		southPanel.add(login);
 		southPanel.add(logout);
 		southPanel.add(whoIsIn);
+//		ImageIcon image = new ImageIcon("C:/Users/PapayaCarlos/Desktop/Dragon_Header.png");
+//		JLabel imagelabel = new JLabel(image);
+//		southPanel.set(imagelabel);
+		
 		getContentPane().add(southPanel, BorderLayout.SOUTH);
-
+		
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(600, 600);
 		setVisible(true);

@@ -1,6 +1,6 @@
 package app;
 
-import game.Logic;
+import Game.Logic;
 
 public class Main {
 	
