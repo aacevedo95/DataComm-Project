@@ -47,11 +47,7 @@ public class Logic {
 		String result;
 		String[] param = text.split(" ");
 		int id = 0;
-		if(param.length == 2) 
-			id = Integer.parseInt(param[1]);
-		else if(id > param.length || id == 0)
-			return "Error! Invalid ID entered, try again!";
-		
+
 		switch(param[0]){
 		//Add chance that rolls d20
 		case "/hp":
