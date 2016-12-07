@@ -1,5 +1,5 @@
 package client;
-import java.io.*;
+import java.io.Serializable;
 
 public class Message implements Serializable {
 

@@ -1,23 +1,12 @@
 package game;
 
-import javax.swing.JTextField;
+import java.util.ArrayList;
 
-import client.Client;
 import client.ClientSideGUI;
+import server.Server.ClientThread;
 import server.ServerSideGUI;
 
 public class Logic {
-
-	/*
-	 * Finds any commands in the chat and parses it, later invokes command and damage methods.
-	 */
-	public static void chatCommands(JTextField text, Client client){
-		//Initial if, checks if text is a command.
-		if(text.getText().charAt(0) == '/') {
-			//Returns your chosen command formatted nicely.
-			text.setText(client.username +" " + command(text.getText(), client));
-		}
-	}
 
 	/*
 	 * Calculates damage, uses a 20 sided die as a damage multiplier.
@@ -53,35 +42,41 @@ public class Logic {
 	/*
 	 * The commands the user can input.
 	 */
-	public static String command(String text, Client client) {
+	public static String command(String text, ArrayList<ClientThread> client, String username) {
 		double dmg;
 		String result;
-		switch(text){
-		default:
-			result = "X-Error! \""+ text + "\" not recognized try again.";
-			break;
+		String[] param = text.split(" ");
+		int id = 0;
+		if(param.length == 2) 
+			id = Integer.parseInt(param[1]);
+		
+		switch(param[0]){
+		//Add chance that rolls d20
 		case "/hp":
-			result = "Current health: "+ client.getHealth();
+			result = "Current health: " +  client.get(id).getHealth();
 			break;
 		case "/fire":
-			dmg = damage(text);
-			client.setHealth(client.getHealth() - dmg);
-			result =  " casts fire, it dealt " + dmg+" damage!";
+			dmg = damage(param[0]);
+			client.get(id).setHealth(client.get(id).getHealth() - dmg );
+			result =  " casts fire, it dealt " + dmg +" damage! To " + username;
 			break;
 		case "/lightning":
-			dmg = damage(text);
-			client.setHealth(client.getHealth() - dmg);
+			dmg = damage(param[0]);
+			client.get(id).setHealth(client.get(id).getHealth() - dmg );
 			result =  " casts lightning, it dealt " + dmg+" damage!";
 			break;
 		case "/ice":
-			dmg = damage(text);
-			client.setHealth(client.getHealth() - dmg);
+			dmg = damage(param[0]);
+			client.get(id).setHealth(client.get(id).getHealth() - dmg );
 			result =  " casts ice, it dealt " + dmg+" damage!";
 			break;
 		case "/attack":
-			dmg = damage(text);
-			client.setHealth(client.getHealth() - dmg);
+			dmg = damage(param[0]);
+			client.get(id).setHealth(client.get(id).getHealth() - dmg );
 			result = " casts attack, it dealt " + dmg+" damage!";
+			break;
+		default:
+			result = "X-Error! \""+ param[0] + "\" not recognized try again.";
 			break;
 		}
 		return result;
@@ -92,6 +87,7 @@ public class Logic {
 	 * 
 	 */
 	public static void run(){
+		ClientSideGUI.main(null);
 		ClientSideGUI.main(null);
 		ClientSideGUI.main(null);
 		ServerSideGUI.main(null);

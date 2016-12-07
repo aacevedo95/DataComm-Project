@@ -6,8 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import client.Client;
 import client.Message;
+import game.Logic;
 
 
 /*
@@ -108,19 +108,14 @@ public class Server {
 	 * @param message
 	 */
 	private void broadcast(String message) {
-		// add HH:mm:ss and \n to the message
 		String messageLf = message + "\n";
-		// display message on console or GUI
 		if(serverGui == null)
 			System.out.print(messageLf);
 		else
-			serverGui.updateRoomMsg(messageLf);     // append in the room window
+			serverGui.updateRoomMsg(messageLf);   
 
-		// we loop in reverse order in case we would have to remove a Client
-		// because it has disconnected
 		for(int i = usersList.size(); --i >= 0;) {
 			ClientThread ct = usersList.get(i);
-			// try to write to the Client if it fails remove it from the list
 			if(!ct.writeMsg(messageLf)) {
 				usersList.remove(i);
 				display("Disconnected Client " + ct.username + " removed from list.");
@@ -143,14 +138,14 @@ public class Server {
 		}
 	}
 	
-	synchronized void damageUser(double damage, Client client) {
-		for(int i = 0; i < usersList.size(); ++i) {
-			ClientThread clientThread = usersList.get(i);
-			if(clientThread.username == client.username) {
-				client.setHealth(client.getHealth() - damage);
-			}
-		}
-	}
+//	synchronized void damageUser(double damage, Client client) {
+//		for(int i = 0; i < usersList.size(); ++i) {
+//			ClientThread clientThread = usersList.get(i);
+//			if(clientThread.username == client.username) {
+//				client.setHealth(client.getHealth() - damage);
+//			}
+//		}
+//	}
 
 	//runs the server
 	public static void main(String[] args) {
@@ -164,9 +159,10 @@ public class Server {
 		Socket socket;
 		ObjectInputStream input;
 		ObjectOutputStream output;
-		int id;
+		int id, newID;
 		String username;
 		Message msg;
+		double health;
 
 		/**
 		 * ClientThread's constructor.
@@ -175,6 +171,7 @@ public class Server {
 		ClientThread(Socket socket) {
 			//Increment id for each user.
 			id = ++uniqueId;
+			health = 100;
 			this.socket = socket;
 			System.out.println("Thread trying to create Object Input/Output Streams");
 			
@@ -192,6 +189,14 @@ public class Server {
 				System.out.println(e);
 			}
 		}
+		
+		public void setHealth(double currentHealth){
+			this.health = currentHealth;
+		}
+
+		public double getHealth(){
+			return this.health;
+		}	
 
 		public void run() {
 			boolean keepGoing = true;
@@ -209,14 +214,18 @@ public class Server {
 				String message = msg.getMessage();
 
 				switch(msg.getType()) {
-
 				case Message.MESSAGE:
+					if(message.charAt(0) == '/'){
+						message = Logic.command(message, usersList, username);
+					}
 					broadcast(username + ": " + message);
 					break;
+					
 				case Message.LOGOUT:
 					display(username + " disconnected with a LOGOUT message.");
 					keepGoing = false;
 					break;
+					
 				case Message.WHO:
 					writeMsg("List of the users connected\n");
 					for(int i = 0; i < usersList.size(); ++i) {
@@ -229,6 +238,9 @@ public class Server {
 			remove(id);
 			close();
 		}
+		
+
+
 		
 		/**
 		 * Closes up the server.

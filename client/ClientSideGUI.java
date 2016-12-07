@@ -124,8 +124,6 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		}
 		// ok it is coming from the JTextField
 		if(connected) {
-			// chat commands validation
-			Logic.chatCommands(tf, client);
 			// just have to send the message
 			client.sendMessage(new Message(Message.MESSAGE, tf.getText()));				
 			tf.setText("");
@@ -155,7 +153,7 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 				return;  
 			}
 
-			client = new Client(server, port, username, this, 100);
+			client = new Client(server, port, username, this);
 			if(!client.start()) 
 				return;
 			tf.setText("");

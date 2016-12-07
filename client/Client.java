@@ -17,7 +17,6 @@ public class Client  {
 	private String server;
 	public String username;
 	private int port;
-	public double health;
 
 	/**
 	 * Client's constructor.
@@ -25,26 +24,11 @@ public class Client  {
 	 * @param port
 	 * @param username
 	 */
-	Client(String server, int port, String username, ClientSideGUI cg, double health) {
+	Client(String server, int port, String username, ClientSideGUI cg) {
 		this.server = server;
 		this.port = port;
 		this.username = username;
 		this.clientGui = cg;
-		this.health = health;
-	}
-
-	/*
-	 * Sets the player health
-	 */
-	public void setHealth(double currentHealth){
-		this.health = currentHealth;
-	}
-
-	/*
-	 * Returns the player's health
-	 */
-	public double getHealth(){
-		return this.health;
 	}
 
 	/*

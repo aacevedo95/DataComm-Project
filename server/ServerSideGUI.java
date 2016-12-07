@@ -71,7 +71,6 @@ public class ServerSideGUI extends JFrame implements ActionListener, WindowListe
 
 	// start or stop where clicked
 	public void actionPerformed(ActionEvent e) {
-		// if running we have to stop
 		if(server != null) {
 			server.stop();
 			server = null;
@@ -79,7 +78,6 @@ public class ServerSideGUI extends JFrame implements ActionListener, WindowListe
 			stopStart.setText("Start");
 			return;
 		}
-		// OK start the server	
 		int port;
 		try {
 			port = Integer.parseInt(tPortNumber.getText().trim());
@@ -88,9 +86,8 @@ public class ServerSideGUI extends JFrame implements ActionListener, WindowListe
 			updateEventMsg("Invalid port number");
 			return;
 		}
-		// ceate a new Server
+		
 		server = new Server(port, this);
-		// and start it as a thread
 		new ServerRunning().start();
 		stopStart.setText("Stop");
 		tPortNumber.setEditable(false);
@@ -98,7 +95,6 @@ public class ServerSideGUI extends JFrame implements ActionListener, WindowListe
 
 	// entry point to start the Server
 	public static void main(String[] arg) {
-		// start server default port 1500
 		new ServerSideGUI(1500);
 	}
 
@@ -110,7 +106,7 @@ public class ServerSideGUI extends JFrame implements ActionListener, WindowListe
 		// if my Server exist
 		if(server != null) {
 			try {
-				server.stop();			// ask the server to close the conection
+				server.stop();
 			}
 			catch(Exception eClose) {
 			}
@@ -152,8 +148,8 @@ public class ServerSideGUI extends JFrame implements ActionListener, WindowListe
 	class ServerRunning extends Thread {
 		public void run() {
 			System.out.println(getLocalAddress());
-			server.start();         // should execute until if fails
-			// the server failed
+			server.start();         
+			
 			stopStart.setText("Start");
 			tPortNumber.setEditable(true);
 			updateEventMsg("Server crashed\n");
