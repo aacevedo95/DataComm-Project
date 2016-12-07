@@ -49,16 +49,18 @@ public class Logic {
 		int id = 0;
 		if(param.length == 2) 
 			id = Integer.parseInt(param[1]);
+		else if(id > param.length || id == 0)
+			return "Error! Invalid ID entered, try again!";
 		
 		switch(param[0]){
 		//Add chance that rolls d20
 		case "/hp":
-			result = "Current health: " +  client.get(id).getHealth();
+			result = "Current health: " +  client.get(id).getHealth() + " of " + username;
 			break;
 		case "/fire":
 			dmg = damage(param[0]);
 			client.get(id).setHealth(client.get(id).getHealth() - dmg );
-			result =  " casts fire, it dealt " + dmg +" damage! To " + username;
+			result =  " casts fire, it dealt " + dmg +" damage to " + username;
 			break;
 		case "/lightning":
 			dmg = damage(param[0]);
@@ -76,7 +78,7 @@ public class Logic {
 			result = " casts attack, it dealt " + dmg+" damage!";
 			break;
 		default:
-			result = "X-Error! \""+ param[0] + "\" not recognized try again.";
+			result = "Error! \""+ param[0] + "\" not recognized try again.";
 			break;
 		}
 		return result;

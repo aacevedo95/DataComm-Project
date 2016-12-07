@@ -138,15 +138,6 @@ public class Server {
 		}
 	}
 	
-//	synchronized void damageUser(double damage, Client client) {
-//		for(int i = 0; i < usersList.size(); ++i) {
-//			ClientThread clientThread = usersList.get(i);
-//			if(clientThread.username == client.username) {
-//				client.setHealth(client.getHealth() - damage);
-//			}
-//		}
-//	}
-
 	//runs the server
 	public static void main(String[] args) {
 		int portNumber = 1500;
@@ -159,7 +150,7 @@ public class Server {
 		Socket socket;
 		ObjectInputStream input;
 		ObjectOutputStream output;
-		int id, newID;
+		int id;
 		String username;
 		Message msg;
 		double health;
@@ -216,7 +207,7 @@ public class Server {
 				switch(msg.getType()) {
 				case Message.MESSAGE:
 					if(message.charAt(0) == '/'){
-						message = Logic.command(message, usersList, username);
+						message = Logic.command(message, usersList, usersList.get(id).username);
 					}
 					broadcast(username + ": " + message);
 					break;
@@ -238,9 +229,6 @@ public class Server {
 			remove(id);
 			close();
 		}
-		
-
-
 		
 		/**
 		 * Closes up the server.

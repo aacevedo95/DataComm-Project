@@ -14,8 +14,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import game.Logic;
-
 
 /*
  * The Client with its GUI
