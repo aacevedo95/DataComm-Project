@@ -46,8 +46,13 @@ public class Logic {
 		double dmg;
 		String result;
 		String[] param = text.split(" ");
-		int id = 0;
+		int id = 1;
+		if(param.length == 2) 
+			id = Integer.parseInt(param[1]);
+		else if(id > param.length || id == 0)
+			return "Error! Invalid ID entered, try again!";
 
+		
 		switch(param[0]){
 		//Add chance that rolls d20
 		case "/hp":
@@ -55,26 +60,29 @@ public class Logic {
 			break;
 		case "/fire":
 			dmg = damage(param[0]);
-			client.get(id).setHealth(client.get(id).getHealth() - dmg );
+			//client.get(id).setHealth(client.get(id).getHealth() - dmg );
 			result =  " casts fire, it dealt " + dmg +" damage to " + username;
 			break;
 		case "/lightning":
 			dmg = damage(param[0]);
-			client.get(id).setHealth(client.get(id).getHealth() - dmg );
+			//client.get(id).setHealth(client.get(id).getHealth() - dmg );
 			result =  " casts lightning, it dealt " + dmg+" damage!";
 			break;
 		case "/ice":
 			dmg = damage(param[0]);
-			client.get(id).setHealth(client.get(id).getHealth() - dmg );
+			//client.get(id).setHealth(client.get(id).getHealth() - dmg );
 			result =  " casts ice, it dealt " + dmg+" damage!";
 			break;
 		case "/attack":
 			dmg = damage(param[0]);
-			client.get(id).setHealth(client.get(id).getHealth() - dmg );
+			//client.get(id).setHealth(client.get(id).getHealth() - dmg );
 			result = " casts attack, it dealt " + dmg+" damage!";
 			break;
+		case "/d20":
+			int d20 = (int)(Math.random()*20+1);
+			result = "You roll a d20 and get a " + d20;
 		default:
-			result = "Error! \""+ param[0] + "\" not recognized try again.";
+			result = "Error! \""+ text + "\" not recognized try again.";
 			break;
 		}
 		return result;
