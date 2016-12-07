@@ -1,6 +1,8 @@
 package server;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +16,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import game.Logic;
+import com.sun.javafx.font.FontFactory;
+
+import Game.Logic;
+import javafx.scene.text.FontBuilder;
+import sun.font.FontFamily;
 
 
 /*
@@ -39,6 +45,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 	// the default port number
 	private int defaultPort;
 	private String defaultHost;
+	private JLabel header;
 
 	// Constructor connection receiving a socket number
 	ClientGUI(String host, int port) {
@@ -49,6 +56,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 		// The CenterPanel which is the chat room
 		ta = new JTextArea("Welcome to the Chat room\n", 80, 80);
 		JPanel centerPanel = new JPanel(new GridLayout(1,1));
+		ta.setLineWrap(true);
+		ta.setWrapStyleWord(true);
 		JScrollPane scrollPane = new JScrollPane(ta);
 		centerPanel.add(scrollPane);
 		ta.setEditable(false);
@@ -63,6 +72,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 		whoIsIn = new JButton("Who is in");
 		whoIsIn.addActionListener(this);
 		whoIsIn.setEnabled(true);		// you have to login before being able to Who is in
+		header = new JLabel("PUTA PUTA PUTA", SwingConstants.CENTER);
+		header.setFont(new Font("Arial", Font.BOLD, 50));
+		getContentPane().add(header, BorderLayout.NORTH);
 
 		JPanel southPanel = new JPanel();
 
