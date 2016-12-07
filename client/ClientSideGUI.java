@@ -1,7 +1,6 @@
 package client;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -15,16 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
-<<<<<<< HEAD:client/ClientSideGUI.java
-=======
-import com.sun.javafx.font.FontFactory;
-
-import Game.Logic;
-import javafx.scene.text.FontBuilder;
-import sun.font.FontFamily;
-
->>>>>>> refs/remotes/origin/master:server/ClientGUI.java
 
 /*
  * The Client with its GUI
@@ -67,14 +56,14 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		logout.setEnabled(false);		
 		whoIsIn = new JButton("Who is in");
 		whoIsIn.addActionListener(this);
-<<<<<<< HEAD:client/ClientSideGUI.java
+
 		whoIsIn.setEnabled(true);		
-=======
+
 		whoIsIn.setEnabled(true);		// you have to login before being able to Who is in
 		header = new JLabel("PUTA PUTA PUTA", SwingConstants.CENTER);
 		header.setFont(new Font("Arial", Font.BOLD, 50));
 		getContentPane().add(header, BorderLayout.NORTH);
->>>>>>> refs/remotes/origin/master:server/ClientGUI.java
+
 
 		
 		southPanel.add(northPanel);
