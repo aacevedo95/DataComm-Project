@@ -234,6 +234,9 @@ public class Server {
 				case Message.MESSAGE:
 					if(message.charAt(0) == '/'){
 						message = Logic.command(message, usersList, usersList.get(id).username);
+//						for (ClientThread clientThread : usersList) {
+//							JOptionPane.showMessageDialog(null, clientThread.username);
+//						}
 					}
 					broadcast(username + ": " + message);
 					break;

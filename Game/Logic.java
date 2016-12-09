@@ -51,7 +51,6 @@ public class Logic {
 			id = Integer.parseInt(param[1]);
 		else if(id > param.length || id == 0)
 			return "Error! Invalid ID entered, try again!";
-
 		
 		switch(param[0]){
 		//Add chance that rolls d20
