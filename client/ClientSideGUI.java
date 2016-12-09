@@ -155,8 +155,16 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		}
 		// ok it is coming from the JTextField
 		if(connected) {
-			// just have to send the message		
-			client.sendMessage(new Message(Message.MESSAGE, tf.getText()));
+			// just have to send the message
+			String newText = tf.getText();
+			Boolean hasNum = false;
+			for(int i =0 ; i < newText.length() ; i++)
+				if(newText.charAt(i) >= '0'  && newText.charAt(i) <= '9')
+					hasNum = true;
+			if(hasNum)
+				client.sendMessage(new Message(Message.MESSAGE, tf.getText()));
+			else
+				client.sendMessage(new Message(Message.MESSAGE, "Please input a valid ID."));
 			tf.setText("");
 			return;
 		}
@@ -193,14 +201,11 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 			tfPort.setEditable(false);
 			tf.addActionListener(this);
 		}
-
 	}
 
 	// to start the whole thing the server
 	public static void main(String[] args) {
 		new ClientSideGUI("localhost", 1500);
-
 	}
-
 
 }

@@ -211,14 +211,21 @@ public class Server {
 			this.health = currentHealth;
 		}
 
-		public double getHealth(){
+		public double getHealth() {
 			return this.health;
 		}	
-
+		public String getUsername() {
+			return this.username;
+		}	
+		
 		public void run() {
 			boolean keepGoing = true;
 			while(keepGoing) {
 				try {
+					if(getHealth() == 0){
+						input.close();
+						keepGoing = false;
+					}
 					msg = (Message) input.readObject();
 				}
 				catch (IOException e) {
@@ -229,14 +236,14 @@ public class Server {
 					break;
 				}
 				String message = msg.getMessage();
-
+				
 				switch(msg.getType()) {
 				case Message.MESSAGE:
 					if(!message.isEmpty() && message.charAt(0) == '/'){
 						String[] param = msg.getMessage().split(" ");
 						//For Debug
 						//JOptionPane.showMessageDialog(serverGui, id + " >>" + param[1]); // + usersList.get(id)
-						message = Logic.command(message, usersList, usersList.get(id-1).username, Integer.parseInt(param[1]));
+						message = Logic.command(message, usersList, Integer.parseInt(param[1]));
 					}
 					broadcast(username + ": " + message);
 					break;
@@ -245,7 +252,6 @@ public class Server {
 					display(username + " disconnected with a LOGOUT message.");
 					keepGoing = false;
 					break;
-					
 				}
 			}
 			remove(id);

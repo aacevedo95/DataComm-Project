@@ -42,41 +42,43 @@ public class Logic {
 	/*
 	 * The commands the user can input.
 	 */
-	public static String command(String text, ArrayList<ClientThread> client, String username, int id) {
+	public static String command(String text, ArrayList<ClientThread> client, int id) {
 		double dmg;
 		String result;
 		String[] param = text.split(" ");
-
-		if(param.length != 2)
-			id = Integer.parseInt(param[1]);
+		
+		if(id > client.size()){
+			return "Please input a valid ID.";
+		}
 		
 		switch(param[0]){
 		case "/hp":
-			result = "Current health: " +  client.get(id-1).getHealth() + " of " + id;
+			result = "Current health: " +  client.get(id-1).getHealth() + " of " + client.get(id-1).getUsername();
 			break;
 		case "/fire":
 			dmg = damage(param[0]);
 			client.get(id-1).setHealth(client.get(id-1).getHealth() - dmg );
-			result =  " casts fire, it dealt " + dmg +" damage to " + id;
+			result =  " casts fire, it dealt " + dmg +" damage to " + client.get(id-1).getUsername();
 			break;
 		case "/lightning":
 			dmg = damage(param[0]);
 			client.get(id-1).setHealth(client.get(id-1).getHealth() - dmg );
-			result =  " casts lightning, it dealt " + dmg+" damage to " + id;
+			result =  " casts lightning, it dealt " + dmg +" damage to " + client.get(id-1).getUsername();
 			break;
 		case "/ice":
 			dmg = damage(param[0]);
 			client.get(id-1).setHealth(client.get(id-1).getHealth() - dmg );
-			result =  " casts ice, it dealt " + dmg+" damage!";
+			result =  " casts ice, it dealt " + dmg +" damage to " + client.get(id-1).getUsername();
 			break;
 		case "/attack":
 			dmg = damage(param[0]);
 			client.get(id-1).setHealth(client.get(id-1).getHealth() - dmg );
-			result = " casts attack, it dealt " + dmg+" damage!";
+			result = " casts attack, it dealt " + dmg +" damage to " + client.get(id-1).getUsername();
 			break;
 		case "/d20":
 			int d20 = (int)(Math.random()*20+1);
-			result = "You roll a d20 and get a " + d20;
+			result = client.get(id-1).getUsername() + " rolled a d20 and got a " + d20;
+			break;
 		default:
 			result = "Error! \""+ text + "\" not recognized try again.";
 			break;
@@ -84,12 +86,11 @@ public class Logic {
 		return result;
 	}
 
-	/*
+	/* 
 	 * Runs the program, calling the main methods in ClientGUI and ServerGUI 
 	 * 
 	 */
 	public static void run(){
-//		ClientSideGUI.main(null);
 		ClientSideGUI.main(null);
 		ClientSideGUI.main(null);
 		ServerSideGUI.main(null);
