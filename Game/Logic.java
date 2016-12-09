@@ -1,4 +1,4 @@
-package Game;
+package game;
 
 import java.util.ArrayList;
 
@@ -42,39 +42,36 @@ public class Logic {
 	/*
 	 * The commands the user can input.
 	 */
-	public static String command(String text, ArrayList<ClientThread> client, String username) {
+	public static String command(String text, ArrayList<ClientThread> client, String username, int id) {
 		double dmg;
 		String result;
 		String[] param = text.split(" ");
-		int id = 1;
-		if(param.length == 2) 
+
+		if(param.length != 2)
 			id = Integer.parseInt(param[1]);
-		else if(id > param.length || id == 0)
-			return "Error! Invalid ID entered, try again!";
 		
 		switch(param[0]){
-		//Add chance that rolls d20
 		case "/hp":
-			result = "Current health: " +  client.get(id).getHealth() + " of " + username;
+			result = "Current health: " +  client.get(id-1).getHealth() + " of " + id;
 			break;
 		case "/fire":
 			dmg = damage(param[0]);
-			//client.get(id).setHealth(client.get(id).getHealth() - dmg );
-			result =  " casts fire, it dealt " + dmg +" damage to " + username;
+			client.get(id-1).setHealth(client.get(id-1).getHealth() - dmg );
+			result =  " casts fire, it dealt " + dmg +" damage to " + id;
 			break;
 		case "/lightning":
 			dmg = damage(param[0]);
-			//client.get(id).setHealth(client.get(id).getHealth() - dmg );
-			result =  " casts lightning, it dealt " + dmg+" damage!";
+			client.get(id-1).setHealth(client.get(id-1).getHealth() - dmg );
+			result =  " casts lightning, it dealt " + dmg+" damage to " + id;
 			break;
 		case "/ice":
 			dmg = damage(param[0]);
-			//client.get(id).setHealth(client.get(id).getHealth() - dmg );
+			client.get(id-1).setHealth(client.get(id-1).getHealth() - dmg );
 			result =  " casts ice, it dealt " + dmg+" damage!";
 			break;
 		case "/attack":
 			dmg = damage(param[0]);
-			//client.get(id).setHealth(client.get(id).getHealth() - dmg );
+			client.get(id-1).setHealth(client.get(id-1).getHealth() - dmg );
 			result = " casts attack, it dealt " + dmg+" damage!";
 			break;
 		case "/d20":
@@ -92,7 +89,7 @@ public class Logic {
 	 * 
 	 */
 	public static void run(){
-		ClientSideGUI.main(null);
+//		ClientSideGUI.main(null);
 		ClientSideGUI.main(null);
 		ClientSideGUI.main(null);
 		ServerSideGUI.main(null);

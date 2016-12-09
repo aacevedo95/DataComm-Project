@@ -4,9 +4,8 @@ import java.io.Serializable;
 public class Message implements Serializable {
 
 	protected static final long serialVersionUID = 1112122200L;
-	public static final int WHO = 0;
-	public static final int MESSAGE = 1;
-	public static final int LOGOUT = 2;
+	public static final int MESSAGE = 0;
+	public static final int LOGOUT = 1;
 	private int type;
 	private String message;
 	

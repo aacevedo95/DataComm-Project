@@ -3,12 +3,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,12 +15,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
-
-import Game.Logic;
-import javafx.scene.text.FontBuilder;
-import sun.font.FontFamily;
-import com.sun.javafx.font.FontFactory;
 
 
 
@@ -56,19 +47,12 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		JPanel southPanel = new JPanel();
 		southPanel.setForeground(Color.WHITE);
 		JPanel northPanel = new JPanel(new GridLayout(3,1));
-		
 		Font font = new Font("Arial", Font.BOLD,12);
-		
-		
 	
-		
 		ta = new JTextArea("\t\t\t\t\tWelcome to Dungeons & Sockets\r\n\t            \t\t\t                 You may think this is a normal chat, but it isn't.\r\n \t     \t\t\t      These are are some of the commads to get you started\r\n\t\t\t\t\t\t/fire\r\n\t\t\t\t\t\t/lightning\r\n\t\t\t\t\t\t/ice\r\n\t\t\t\t\t\t/attack\r\n \t\t\t\tYou can check your own health by typing /hp. Good Luck!\r\n\r\n", 80, 80);
 		ta.setForeground(Color.RED);
 		ta.setBackground(Color.BLACK);
-		
 		ta.setFont(font);
-		
-		
 		
 		JPanel centerPanel = new JPanel(new GridLayout(1,1));
 		centerPanel.setForeground(Color.WHITE);
@@ -97,8 +81,6 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		header_1.setFont(new Font("Arial", Font.BOLD, 50));
 		getContentPane().add(header_1, BorderLayout.NORTH);
 
-
-		
 		southPanel.add(northPanel);
 		JPanel serverAndPort = new JPanel(new GridLayout(1,5, 1, 3));
 		serverAndPort.setBackground(Color.BLACK);
@@ -130,16 +112,10 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		tf.requestFocus();
 		southPanel.add(login);
 		southPanel.add(logout);
-		
-		
-		
 		northPanel.setBackground(Color.BLACK);
 		southPanel.setBackground(Color.BLACK);
 		
-		
 		getContentPane().add(southPanel, BorderLayout.SOUTH);
-		
-		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(996, 640);
 		
@@ -153,8 +129,6 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		ta.append(str);
 		ta.setCaretPosition(ta.getText().length() - 1);
 	}
-	// called by the GUI is the connection failed
-	// we reset our buttons, label, textfield
 	void connectionFailed() {
 		login.setEnabled(true);
 		logout.setEnabled(false);
@@ -181,24 +155,19 @@ public class ClientSideGUI extends JFrame implements ActionListener {
 		}
 		// ok it is coming from the JTextField
 		if(connected) {
-			// just have to send the message
+			// just have to send the message		
 			client.sendMessage(new Message(Message.MESSAGE, tf.getText()));
 			tf.setText("");
 			return;
 		}
-		
 
 		if(o == login) {
-			// ok it is a connection request
 			String username = tf.getText().trim();
-			// empty username ignore it
 			if(username.length() == 0)
 				return;
-			// empty serverAddress ignore it
 			String server = tfServer.getText().trim();
 			if(server.length() == 0)
 				return;
-			// empty or invalid port number, ignore it
 			String portNumber = tfPort.getText().trim();
 			if(portNumber.length() == 0)
 				return;

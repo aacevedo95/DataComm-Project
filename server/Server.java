@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 import client.Message;
-import Game.Logic;
+import game.Logic;
 
 
 /*
@@ -232,11 +232,11 @@ public class Server {
 
 				switch(msg.getType()) {
 				case Message.MESSAGE:
-					if(message.charAt(0) == '/'){
-						message = Logic.command(message, usersList, usersList.get(id).username);
-//						for (ClientThread clientThread : usersList) {
-//							JOptionPane.showMessageDialog(null, clientThread.username);
-//						}
+					if(!message.isEmpty() && message.charAt(0) == '/'){
+						String[] param = msg.getMessage().split(" ");
+						//For Debug
+						//JOptionPane.showMessageDialog(serverGui, id + " >>" + param[1]); // + usersList.get(id)
+						message = Logic.command(message, usersList, usersList.get(id-1).username, Integer.parseInt(param[1]));
 					}
 					broadcast(username + ": " + message);
 					break;
@@ -246,21 +246,11 @@ public class Server {
 					keepGoing = false;
 					break;
 					
-				case Message.WHO:
-					writeMsg("List of the users connected\n");
-					for(int i = 0; i < usersList.size(); ++i) {
-						ClientThread thread = usersList.get(i);
-						writeMsg((i+1) + ") " + thread.username);
-					}
-					break;
 				}
 			}
 			remove(id);
 			close();
 		}
-		
-		
-
 		
 		/**
 		 * Closes up the server.
