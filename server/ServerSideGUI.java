@@ -11,6 +11,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.Font;
 
 /*
  * The server as a GUI
@@ -34,29 +37,48 @@ public class ServerSideGUI extends JFrame implements ActionListener, WindowListe
 	// server constructor that receive the port to listen to for connection as parameter
 	ServerSideGUI(int port) {
 		super("Chat Server");
+		getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 11));
+		getContentPane().setForeground(Color.WHITE);
+		getContentPane().setBackground(Color.BLACK);
+		setForeground(Color.WHITE);
+		setBackground(Color.BLACK);
 		server = null;
 		JPanel north = new JPanel();
-		JPanel center = new JPanel(new GridLayout(2,1));
+		north.setToolTipText("");
+		north.setForeground(Color.WHITE);
+		north.setBackground(Color.BLACK);
+		JPanel center = new JPanel(new GridLayout(1,2));
 		
-		north.add(new JLabel("Port number: "));
+		JLabel label = new JLabel("Port number: ");
+		label.setForeground(Color.WHITE);
+		north.add(label);
 		tPortNumber = new JTextField("  " + port);
 		north.add(tPortNumber);
 		stopStart = new JButton("Start");
 		stopStart.addActionListener(this);
 		north.add(stopStart);
-		add(north, BorderLayout.NORTH);
-		chat = new JTextArea(80,80);
+		getContentPane().add(north, BorderLayout.NORTH);
+		chat = new JTextArea(50,50);
+		chat.setBackground(Color.BLACK);
+		chat.setLineWrap(true);
+		chat.setForeground(Color.WHITE);
 		chat.setEditable(false);
 		updateRoomMsg("Chat room.\n");
 		center.add(new JScrollPane(chat));
-		event = new JTextArea(80,80);
+		event = new JTextArea(10,10);
+		event.setForeground(Color.WHITE);
+		event.setLineWrap(true);
+		event.setBackground(Color.BLACK);
 		event.setEditable(false);
 		updateEventMsg("Events log.\n");
 		
 		center.add(new JScrollPane(event));	
-		add(center);
+		getContentPane().add(center, BorderLayout.EAST);
 		addWindowListener(this);
-		setSize(400, 600);
+		setSize(1129, 311);
+		ImageIcon image = new ImageIcon("C:/Users/PapayaCarlos/Desktop/Dragon_Header.png");
+		JLabel imagelabel = new JLabel(image);
+		add(imagelabel, BorderLayout.SOUTH);
 		setVisible(true);
 	}		
 
@@ -123,31 +145,14 @@ public class ServerSideGUI extends JFrame implements ActionListener, WindowListe
 	public void windowActivated(WindowEvent e) {}
 	public void windowDeactivated(WindowEvent e) {}
 
-	private static InetAddress getLocalAddress(){
-		try
-		{
-			Enumeration<NetworkInterface> b = NetworkInterface.getNetworkInterfaces();
-			while (b.hasMoreElements())
-			{
-				for (InterfaceAddress f : b.nextElement().getInterfaceAddresses())
-					if (f.getAddress().isSiteLocalAddress())
-						return f.getAddress();
-			}
-		}
-		catch (SocketException e)
-		{
-			System.out.println("Error getting local address:");
-			System.out.println(e.getMessage());
-		}
-		return null;
-	}
+
 
 	/*
 	 * A thread to run the Server
 	 */
 	class ServerRunning extends Thread {
 		public void run() {
-			System.out.println(getLocalAddress());
+			
 			server.start();         
 			
 			stopStart.setText("Start");

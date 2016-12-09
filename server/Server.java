@@ -2,9 +2,14 @@ package server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import client.Message;
 import Game.Logic;
@@ -38,6 +43,25 @@ public class Server {
 		this.port = port;
 		usersList = new ArrayList<ClientThread>();
 	}
+	
+	private static InetAddress getLocalAddress(){
+		try
+		{
+			Enumeration<NetworkInterface> b = NetworkInterface.getNetworkInterfaces();
+			while (b.hasMoreElements())
+			{
+				for (InterfaceAddress f : b.nextElement().getInterfaceAddresses())
+					if (f.getAddress().isSiteLocalAddress())
+						return f.getAddress();
+			}
+		}
+		catch (SocketException e)
+		{
+			System.out.println("Error getting local address:");
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
 
 	/**
 	 * Start server.
@@ -50,6 +74,7 @@ public class Server {
 			while(true) {
 				// format message saying we are waiting
 				display("Server waiting for Clients on port " + port + ".");
+				display("Send this ip to your friends: " + getLocalAddress().toString());
 				Socket socket = serverSocket.accept(); 
 				
 				if(!isOnline)
@@ -80,6 +105,7 @@ public class Server {
 		catch (IOException err) {
 			display("Exception on new ServerSocket: " + err + "\n");
 		}
+		
 	}
 	
 	/**
@@ -138,15 +164,6 @@ public class Server {
 		}
 	}
 	
-//	synchronized void damageUser(double damage, Client client) {
-//		for(int i = 0; i < usersList.size(); ++i) {
-//			ClientThread clientThread = usersList.get(i);
-//			if(clientThread.username == client.username) {
-//				client.setHealth(client.getHealth() - damage);
-//			}
-//		}
-//	}
-
 	//runs the server
 	public static void main(String[] args) {
 		int portNumber = 1500;
@@ -159,7 +176,7 @@ public class Server {
 		Socket socket;
 		ObjectInputStream input;
 		ObjectOutputStream output;
-		int id, newID;
+		int id;
 		String username;
 		Message msg;
 		double health;
@@ -216,7 +233,7 @@ public class Server {
 				switch(msg.getType()) {
 				case Message.MESSAGE:
 					if(message.charAt(0) == '/'){
-						message = Logic.command(message, usersList, username);
+						message = Logic.command(message, usersList, usersList.get(id).username);
 					}
 					broadcast(username + ": " + message);
 					break;
@@ -239,7 +256,7 @@ public class Server {
 			close();
 		}
 		
-
+		
 
 		
 		/**
